@@ -1,27 +1,36 @@
-import os, sys
+import os, platform, time
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)) + '/'
-WORK_PATH = PROJECT_ROOT
-PROGRAM_PATH = sys.executable.replace("\\", "/")
 MAIN_FILENAME = os.path.abspath(__file__).replace('\\', '/').split('/')[-1]
+OS = platform.system()
 
-CharToDelete = '\\!@#$^=;:\'\",<>`/?()[]{}+*% · ₩'     # 삭제할 문자들
-ReplaceToUnderScore = '　​           /~-,'                   # _로 대체할 문자들
+CharToDelete = '\\!@#$^=;:\'\",<>`/?()[]{}+*% · ₩,'     # 삭제할 문자들
+ReplaceToUnderScore = '　​           /~-'                   # _로 대체할 문자들
+
+
+def clearConsole():
+    # 콘솔 클리어. OS별 다른 커맨드
+    if OS == 'Windows':
+        os.system('cls')
+    elif OS == 'Darwin' or OS == 'Linux':
+        os.system('clear')
 
 
 class productNameChecker():
     def __init__(self):
         self.isItActive = True
         while True:
+            clearConsole()
             self.old_fileList = list()
             self.changedList = list()
             self.option = input('윈도우 : \'Ctrl + C\' 또는 \'Ctrl + BREAK\'를 이용하여 강제 종료합니다.\nMAC : \'Command + C\'를 이용하여 강제 종료합니다.\n1 - 프로그램의 디렉토리에서 실행. (' + PROJECT_ROOT + ')\n2 - 지정된 디렉토리에서 실행\n3 - 종료\n')
+            clearConsole()
             # 1 입력시 실행
             if self.option == '1':
                 try:
                     if self.checkDir(PROJECT_ROOT):
                         self.checkName(PROJECT_ROOT)
-                        print('\n\n작업이 끝났습니다.\n')
+                        input('\n\n작업이 끝났습니다.\nEnter를 입력하여 계속합니다.')
 
                 except Exception as E:
                     print(str(E) + '\n\n오류가 발생하였습니다.')
@@ -32,23 +41,30 @@ class productNameChecker():
                     pwd = input('디렉토리를 입력해 주세요')
                     if self.checkDir(pwd):
                         self.checkName(pwd)
-                        print('\n\n작업이 끝났습니다.\n')
+                        input('\n\n작업이 끝났습니다.\nEnter를 입력하여 계속합니다')
                 except Exception as E:
                     print(str(E) + '\n\n오류가 발생하였습니다.')
 
             # 3 입력시 실행
             elif self.option == '3':
-                self.__del__()
+                raise KeyboardInterrupt
 
             # 잘못된 값 입력 시 실행
             else:
-                print('잘못된 입력입니다. 재입력 해주세요.')
+                cnt = 3
+                for i in range(3):
+                    clearConsole()
+                    print('잘못된 입력입니다. ' + str(cnt) + '초 후 선택창으로 돌아갑니다.')
+                    cnt -= 1
+                    time.sleep(1)
+                time.sleep(3)
                 self.option = ''
 
     def __del__(self):
         self.isItActive = False
         print('프로그램을 종료합니다.')
-        raise KeyboardInterrupt
+        clearConsole()
+        # raise KeyboardInterrupt
 
     def __repr__(self):
         return self.changedList
@@ -73,23 +89,34 @@ class productNameChecker():
         for productName in self.old_fileList:
             originName = productName
             # 필요 없는 문자 (삭제되어야 할 문자) 발견 시 이름 앞에 !!!!! 붙이기.
-            temp = 0
+            temp = False
             for x in range(len(CharToDelete)):
                 if productName.count(CharToDelete[x]) and not temp:
-                    temp += 1
-                    changed += 1
                     productName = '!!!!!' + productName
-            # 필요 없는 문자 (_로 교체되어야 할 문자) 발견 시 이름 앞에 !!!!! 붙이기.
+                    if not temp:
+                        temp = True
+                        changed += 1
+            # 필요한 문자 (ReplaceToUnderScore - 상단에 선언된 String)를 언더바(_)로 수정.
             for x in range(len(ReplaceToUnderScore)):
-                if productName.count(ReplaceToUnderScore[x]) and not temp:
-                    temp += 1
+                if productName.count(ReplaceToUnderScore[x]):
+                    productName = productName.replace(ReplaceToUnderScore[x], '_')
+                    if not temp:
+                        temp = True
+                        changed += 1
+
+            # 특정 지정 문자를 지정된 값으로 수정.
+            if productName.count('×'):
+                productName = productName.replace('×', 'X')
+                if not temp:
+                    temp = True
                     changed += 1
-                    productName = '!!!!!' + productName
 
             if temp:
                 self.changedList.append(str(productName))
                 os.rename(pwd+originName, pwd+str(productName))
                 print('\n' + originName + '\n--> ' + str(productName))
+            else:
+                self.changedList.append('')
 
         print('\n\n' + str(len(self.old_fileList)) + '개의 파일 중 ' + str(changed) + '개의 파일이 잘못된것으로 추정됨.')
 
