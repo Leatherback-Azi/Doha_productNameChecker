@@ -1,7 +1,7 @@
 import os, platform, time
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)) + '/'
-PROJECT_ROOT_PARENT = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)).replace('\\', '/') + '/'
+PROJECT_ROOT_PARENT = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir)).replace('\\', '/') + '/'
 MAIN_FILENAME = os.path.abspath(__file__).replace('\\', '/').split('/')[-1]
 OS = platform.system()
 

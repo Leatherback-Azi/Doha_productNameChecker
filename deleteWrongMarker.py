@@ -33,19 +33,3 @@ if __name__ == '__main__':
         print(str(E))
     except KeyboardInterrupt:
         print('KeyboardInterrupt! Exiting...')
-
-
-
-# self.NAME = self.NAME.replace(' ', '_')
-# self.NAME = self.NAME.replace('+', '_증정_')
-# self.NAME = self.NAME.replace('*', 'x')
-# self.NAME = self.NAME.replace('%', '프로')
-# self.NAME = self.NAME.replace('×', 'X')
-# self.NAME = self.NAME.replace('㎖', 'ml')
-# self.NAME = self.NAME.replace('㎈', 'cal')
-# self.NAME = self.NAME.replace('㎉', 'kcal')
-# self.NAME = self.NAME.replace('㎏', 'kg')
-# self.NAME = self.NAME.replace('ℓ', 'l')
-# ㏄
-# ㎎
-
