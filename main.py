@@ -1,6 +1,7 @@
 import os, platform, time
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)) + '/'
+PROJECT_ROOT_PARENT = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
 MAIN_FILENAME = os.path.abspath(__file__).replace('\\', '/').split('/')[-1]
 OS = platform.system()
 
@@ -24,13 +25,16 @@ class productNameChecker():
             clearConsole()
             self.old_fileList = list()
             self.changedList = list()
-            self.option = input('윈도우 : \'Ctrl + C\' 또는 \'Ctrl + BREAK\'를 이용하여 강제 종료합니다.\nMAC : \'Command + C\'를 이용하여 강제 종료합니다.\n1 - 프로그램의 디렉토리에서 실행. (' + PROJECT_ROOT + ')\n2 - 지정된 디렉토리에서 실행\n3 - 종료\n')
+            self.option = input('윈도우 : \'Ctrl + C\' 또는 \'Ctrl + BREAK\'를 이용하여 강제 종료합니다.'
+                                '\nMAC : \'Command + C\'를 이용하여 강제 종료합니다.\n1 - 프로그램의 디렉토리에서 실행. (' + PROJECT_ROOT_PARENT + ')'
+                                '\n2 - 지정된 디렉토리에서 실행'
+                                '\n3 - 종료\n')
             clearConsole()
             # 1 입력시 실행
             if self.option == '1':
                 try:
-                    if self.checkDir(PROJECT_ROOT):
-                        self.checkName(PROJECT_ROOT)
+                    if self.checkDir(PROJECT_ROOT_PARENT):
+                        self.checkName(PROJECT_ROOT_PARENT)
                         input('\n\n작업이 끝났습니다.\nEnter를 입력하여 계속합니다.')
 
                 except Exception as E:
@@ -60,7 +64,6 @@ class productNameChecker():
                     print('잘못된 입력입니다. ' + str(cnt) + '초 후 선택창으로 돌아갑니다.')
                     cnt -= 1
                     time.sleep(1)
-                time.sleep(3)
                 self.option = ''
 
     def __del__(self):
@@ -150,6 +153,8 @@ class productNameChecker():
             if file.find('.jpg'):
                 imgFormet += 1
             elif file.find('.png'):
+                imgFormet += 1
+            elif file.find('.gif'):
                 imgFormet += 1
 
         if imgFormet <= 10:
