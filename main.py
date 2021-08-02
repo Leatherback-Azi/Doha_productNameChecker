@@ -6,6 +6,7 @@ OS = platform.system()
 
 CharToDelete = '\\!@#$^=;:\'\",<>`/?()[]{}+*% · ₩,'     # 삭제할 문자들
 ReplaceToUnderScore = '　​           /~-'                   # _로 대체할 문자들
+CharToBeReplace = '×㎖㎈㎉㎏ℓ㏄㎎'
 
 
 def clearConsole():
@@ -34,6 +35,7 @@ class productNameChecker():
 
                 except Exception as E:
                     print(str(E) + '\n\n오류가 발생하였습니다.')
+                    time.sleep(3)
 
             # 2 입력시 실행
             elif self.option == '2':
@@ -44,6 +46,7 @@ class productNameChecker():
                         input('\n\n작업이 끝났습니다.\nEnter를 입력하여 계속합니다')
                 except Exception as E:
                     print(str(E) + '\n\n오류가 발생하였습니다.')
+                    time.sleep(3)
 
             # 3 입력시 실행
             elif self.option == '3':
@@ -104,12 +107,23 @@ class productNameChecker():
                         temp = True
                         changed += 1
 
-            # 특정 지정 문자를 지정된 값으로 수정.
-            if productName.count('×'):
-                productName = productName.replace('×', 'X')
-                if not temp:
-                    temp = True
-                    changed += 1
+            replaceChar = 0
+            for x in range(len(CharToBeReplace)):
+                if productName.count(CharToBeReplace[x]):
+                    if not temp:
+                        temp = True
+                        changed += 1
+                        replaceChar += 1
+
+            # 특정 지정 문자를 지정된 값으로 수정. 추후 추가 시 상단의 CharToBeReplace에 추가 요망.
+            productName = productName.replace('×', 'X')
+            productName = productName.replace('㎖', 'X')
+            productName = productName.replace('㎈', 'X')
+            productName = productName.replace('㎉', 'X')
+            productName = productName.replace('㎏', 'X')
+            productName = productName.replace('ℓ', 'X')
+            productName = productName.replace('㏄', 'X')
+            productName = productName.replace('㎎', 'X')
 
             if temp:
                 self.changedList.append(str(productName))
