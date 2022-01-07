@@ -18,7 +18,7 @@ def clearConsole():
         os.system('clear')
 
 
-class productNameChecker():
+class productNameChecker:
     def __init__(self):
         self.isItActive = True
         while True:
@@ -92,13 +92,14 @@ class productNameChecker():
 
         # 파일 이름 가공
         changed = 0
+        loop = 0
         for productName in self.old_fileList:
             originName = productName
-            # 필요 없는 문자 (삭제되어야 할 문자) 발견 시 이름 앞에 !!!!! 붙이기.
+            # 필요 없는 문자 (삭제되어야 할 문자) 발견 시 이름 앞에 !!!!! 붙이기. - 주석처리됨.
             temp = False
             for x in range(len(CharToDelete)):
                 if productName.count(CharToDelete[x]) and not temp:
-                    productName = '!!!!!' + productName
+                    # productName = '!!!!!' + productName
                     if not temp:
                         temp = True
                         changed += 1
@@ -120,20 +121,26 @@ class productNameChecker():
 
             # 특정 지정 문자를 지정된 값으로 수정. 추후 추가 시 상단의 CharToBeReplace에 추가 요망.
             productName = productName.replace('×', 'X')
-            productName = productName.replace('㎖', 'X')
-            productName = productName.replace('㎈', 'X')
-            productName = productName.replace('㎉', 'X')
-            productName = productName.replace('㎏', 'X')
-            productName = productName.replace('ℓ', 'X')
-            productName = productName.replace('㏄', 'X')
-            productName = productName.replace('㎎', 'X')
+            productName = productName.replace('㎖', 'ml')
+            productName = productName.replace('㎈', 'cal')
+            productName = productName.replace('㎉', 'kcal')
+            productName = productName.replace('㎏', 'kg')
+            productName = productName.replace('ℓ', 'l')
+            productName = productName.replace('㏄', 'cc')
+            productName = productName.replace('㎎', 'mg')
 
             if temp:
                 self.changedList.append(str(productName))
-                os.rename(pwd+originName, pwd+str(productName))
+                # if not productName == self.old_fileList[loop]:
+                try:
+                    os.rename(pwd+originName, pwd+str(productName))
+                except OSError as E:
+                    print(E)
                 print('\n' + originName + '\n--> ' + str(productName))
+                loop += 1
             else:
                 self.changedList.append('')
+                loop += 1
 
         print('\n\n' + str(len(self.old_fileList)) + '개의 파일 중 ' + str(changed) + '개의 파일이 잘못된것으로 추정됨.')
 
